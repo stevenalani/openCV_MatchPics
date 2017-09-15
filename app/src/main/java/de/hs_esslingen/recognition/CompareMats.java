@@ -1,6 +1,8 @@
 package de.hs_esslingen.recognition;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.nfc.Tag;
 import android.support.constraint.solver.widgets.Snapshot;
 import android.util.Log;
 
@@ -8,13 +10,18 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Steven on 14.09.2017.
@@ -31,7 +38,7 @@ public class CompareMats implements Runnable {
     }
 
     public void run() {
-        Rect roi = new Rect(50, 50, 30, 30);
+        Rect roi = new Rect(50, 10, 70, 100);
         Mat cropped = new Mat(mattempl, roi);
         int result_cols = this.matimg.cols() - cropped.cols() + 1;
         int result_rows = this.matimg.rows() - cropped.rows() + 1;
@@ -46,7 +53,6 @@ public class CompareMats implements Runnable {
         } else {
             matchLoc = mmr.maxLoc;
         }
-
         Mat temp = matimg;
         Imgproc.rectangle(matimg, matchLoc, new Point(matchLoc.x + cropped.cols(),
                 matchLoc.y + cropped.rows()), new Scalar(0, 255, 0));
@@ -57,3 +63,4 @@ public class CompareMats implements Runnable {
         Log.i("test", String.valueOf(mmr.minLoc));
     }
 }
+
